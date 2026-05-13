@@ -8,17 +8,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
+    <!-- Site Simgesi (Favicon) -->
+    <link rel="icon" type="image/png" href="./morphdoc.png?v=2">
+    <link rel="shortcut icon" type="image/png" href="./morphdoc.png?v=2">
+    <link rel="apple-touch-icon" href="./morphdoc.png?v=2">
 </head>
 <body class="bg-[#f5f5f7] text-[#1d1d1f] min-h-screen pb-32">
 
     <div class="max-w-[1200px] mx-auto px-6 py-12">
         <!-- Header -->
         <header class="flex justify-between items-center mb-12">
-            <div class="flex items-center gap-3">
-                <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
-                    <i data-lucide="layers" class="w-6 h-6"></i>
-                </div>
-                <h1 class="text-2xl font-bold tracking-tight">MorphDoc <span class="font-light text-gray-400">Pro</span></h1>
+            <div class="flex items-center gap-4">
+                <img src="./morphdoc.png?v=2" alt="MorphDoc Pro Logo" class="h-16 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-300">
+                <h1 class="text-3xl font-bold tracking-tight">MorphDoc <span class="font-light text-gray-400">Pro</span></h1>
             </div>
             <button onclick="clearAll()" class="text-xs font-medium px-4 py-2 bg-white text-red-500 hover:bg-red-50 rounded-full border border-gray-100 shadow-sm transition-all flex items-center gap-2">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Listeyi Temizle
