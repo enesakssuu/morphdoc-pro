@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+.glass-effect { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); }
+.drop-zone-active { border-color: #3b82f6; background: #eff6ff; }
+.custom-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); }
+input[type="number"], select { outline: none; border: 1px solid #e5e7eb; transition: all 0.2s; }
+input:focus, select:focus { border-color: #3b82f6; ring: 2px ring-blue-100; }
+/* Custom scrollbar */
+#fileList::-webkit-scrollbar { width: 6px; }
+#fileList::-webkit-scrollbar-thumb { background-color: #e5e7eb; border-radius: 10px; }

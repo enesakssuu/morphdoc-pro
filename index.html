@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorphDoc Pro — Gelişmiş DOCX Optimizasyonu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#f5f5f7] text-[#1d1d1f] min-h-screen pb-32">
+
+    <div class="max-w-[1200px] mx-auto px-6 py-12">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
+                    <i data-lucide="layers" class="w-6 h-6"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight">MorphDoc <span class="font-light text-gray-400">Pro</span></h1>
+            </div>
+            <button onclick="clearAll()" class="text-xs font-medium px-4 py-2 bg-white text-red-500 hover:bg-red-50 rounded-full border border-gray-100 shadow-sm transition-all flex items-center gap-2">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Listeyi Temizle
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Sol Panel: Upload & Settings -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <div id="dropZone" class="bg-white p-10 rounded-[32px] border-2 border-dashed border-gray-200 transition-all cursor-pointer hover:border-blue-400 group text-center custom-shadow">
+                    <input type="file" id="fileInput" class="hidden" multiple accept=".docx">
+                    <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-1">Dosyaları Buraya Bırak</h3>
+                    <p class="text-sm text-gray-400">veya tıklayarak seç (Max 20 DOCX)</p>
+                </div>
+
+                <!-- Ayarlar Paneli -->
+                <div class="bg-white p-8 rounded-[32px] custom-shadow border border-gray-50">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <i data-lucide="settings-2" class="w-3.5 h-3.5"></i> İşleme Parametreleri
+                    </h4>
+                    
+                    <div class="space-y-5">
+                        <!-- Çözünürlük -->
+                        <div>
+                            <label class="text-[11px] font-bold text-gray-500 uppercase ml-1">Hedef Çözünürlük (G x Y)</label>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <div class="relative">
+                                    <input type="number" id="targetW" value="1000" class="w-full bg-gray-50 p-3 rounded-2xl text-sm font-mono focus:bg-white pl-4">
+                                    <span class="absolute right-3 top-3 text-[10px] text-gray-300">px</span>
+                                </div>
+                                <div class="relative">
+                                    <input type="number" id="targetH" value="450" class="w-full bg-gray-50 p-3 rounded-2xl text-sm font-mono focus:bg-white pl-4">
+                                    <span class="absolute right-3 top-3 text-[10px] text-gray-300">px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Format -->
+                        <div>
+                            <label class="text-[11px] font-bold text-gray-500 uppercase ml-1">Çıktı Formatı</label>
+                            <select id="imgFormat" class="w-full bg-gray-50 p-3 rounded-2xl text-sm mt-1 cursor-pointer focus:bg-white">
+                                <option value="image/jpeg">JPEG (Sıkıştırılmış)</option>
+                                <option value="image/png">PNG (Şeffaf/Net)</option>
+                                <option value="image/webp">WebP (Hafif)</option>
+                            </select>
+                        </div>
+
+                        <!-- Kalite -->
+                        <div id="qualityContainer">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase ml-1">Görsel Kalitesi</label>
+                                <span id="qValue" class="text-xs font-mono text-blue-600 font-bold">%85</span>
+                            </div>
+                            <input type="range" id="imgQuality" min="10" max="100" value="85" class="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Panel: Liste -->
+            <div class="lg:col-span-8">
+                <div class="bg-white p-8 rounded-[32px] custom-shadow min-h-[580px] flex flex-col border border-gray-50">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-xl font-bold tracking-tight">İşlem Sırası</h2>
+                        <span id="fileCount" class="text-xs font-semibold text-gray-400 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">Dosya yok</span>
+                    </div>
+
+                    <div id="fileList" class="space-y-3 flex-grow overflow-y-auto max-h-[620px] pr-2">
+                        <div id="emptyState" class="flex flex-col items-center justify-center h-80 text-gray-300">
+                            <div class="bg-gray-50 p-8 rounded-full mb-4">
+                                <i data-lucide="file-plus-2" class="w-12 h-12 opacity-20"></i>
+                            </div>
+                            <p class="text-sm font-medium">Henüz bir belge eklenmedi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Bar -->
+    <div id="actionBar" class="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-2xl px-6 opacity-0 translate-y-10 transition-all duration-500 pointer-events-none z-50">
+        <div class="glass-effect border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full p-3 pl-8 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div id="statusDot" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span id="totalStatus" class="text-sm font-semibold text-gray-700 uppercase tracking-tight">Hazır</span>
+            </div>
+            <button id="processBtn" class="bg-blue-600 text-white px-10 py-3 rounded-full font-bold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all transform active:scale-95 flex items-center gap-2">
+                <span>İşlemi Başlat</span>
+                <i data-lucide="zap" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
